@@ -1,7 +1,11 @@
 import store from "./store/configureStore";
 import axios from "axios";
 import { getTasks } from "./store/tasks";
-import { fetchTasks } from "./store/tasks";
+import { apiCallBegan } from "./store/api";
+import { loadTasks } from "./store/tasks";
+import { addNewTask } from "./store/tasks";
+import { updateCompleted } from "./store/tasks";
+import { deleteTask } from "./store/tasks";
 
 // I sposób
 
@@ -25,4 +29,10 @@ import { fetchTasks } from "./store/tasks";
 // gettingTasks()
 
 // II sposób
-store.dispatch(fetchTasks())
+
+store.dispatch(loadTasks())
+// store.dispatch(addNewTask({task: "Zadanie ukończone"}))
+store.dispatch(updateCompleted({id: 6, completed: true}))
+store.dispatch(deleteTask({id: 7}))
+store.dispatch(deleteTask({id: 8}))
+store.dispatch(deleteTask({id: 9}))

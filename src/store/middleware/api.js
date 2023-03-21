@@ -1,16 +1,31 @@
 import axios from "axios"
+import { apiCallBegan } from "../api"
 
-const api = store => next => action => {
-    if (action.type !== "apiRequest") {
+const api = ({dispatch}) => next => async action => {
+    if (action.type !== apiCallBegan.type) {
         return next (action)
     }
 
-    const {url, method, data, onSuccess, onError} = action.payload
+    const {url, method, data, onStart, onSuccess, onError} = action.payload
 
-    axios.request({
-        baseURL: "http://localhost:5000/api", 
-        url, 
-        method, 
-        data
-    }).then().catch()
+    if (onStart) {
+        dispatch({type: onStart})
+    }
+
+    try {
+        const res = await axios.request({
+            baseURL: "http://localhost:5000/api", 
+            url, 
+            method, 
+            data
+        })
+        dispatch({type: onSuccess, payload: res.data})
+    }
+    catch (error){
+        if(onError) 
+        dispatch({type: onError, payload: {error: error.message}})
+        dispatch({type: "SHOW_ERROR", payload: {error: error.message}})
+    }
 }
+
+export default api
